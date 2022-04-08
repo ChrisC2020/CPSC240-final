@@ -9,8 +9,8 @@ public class CasinoGui extends JPanel {
 
     public CasinoGui() {
 
-        UserPane test = new UserPane();
-        userPane = test.getUserPane();
+        UserPane up = new UserPane();
+        userPane = up.getUserPane();
 
         // create tabbed game pane
         gamePane = new JTabbedPane();

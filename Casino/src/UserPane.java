@@ -3,8 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class UserPane implements ActionListener {
 
@@ -71,6 +73,7 @@ public class UserPane implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         Object button = e.getSource();
+        // sets the bet amount
         if ( button == setBet ) {
             currentBet = Double.parseDouble(bet.getText());
             if ( currentBet > balance ) {
@@ -79,10 +82,29 @@ public class UserPane implements ActionListener {
                 currentBet = 0;
             }
             betLabel.setText(String.format("Current bet: $%.2f", currentBet));
+            // changes users
         } else if ( button == changeButton ) {
-            JOptionPane.showMessageDialog(null, "changeButton");
+            try {
+                userName = JOptionPane.showInputDialog("Enter the name of the user you would like to load.");
+                loadUser();
+                currentBet = 0;
+                betLabel.setText(String.format("Current bet: $%.2f", currentBet));
+            } catch ( IOException ioe ){
+                JOptionPane.showMessageDialog(null, "Unable to load user.");
+            }
         } else if ( button == newButton ) {
-            JOptionPane.showMessageDialog(null, "newButton");
+            // creates new users
+            try {
+                userName = JOptionPane.showInputDialog("Enter your new username.");
+                balance = 500;
+                saveUser();
+                currentBet = 0;
+                betLabel.setText(String.format("Current bet: $%.2f", currentBet));
+            } catch ( IOException ioe ){
+                JOptionPane.showMessageDialog(null, "Unable to create user.");
+            }
+            balanceLabel.setText(String.format("Balance: $%.2f", balance));
+            nameLabel.setText(String.format(userName));
         } else {
             JOptionPane.showMessageDialog(null, "???");
         }
@@ -107,6 +129,7 @@ public class UserPane implements ActionListener {
     public void setBalance(double balance) {
 
         this.balance = balance;
+        balanceLabel.setText(String.format("Balance: $%.2f", balance));
 
     }
 
@@ -118,16 +141,30 @@ public class UserPane implements ActionListener {
     }
 
     // save user info to a file
-    // cannot change username yet
     public void saveUser() throws IOException {
 
-        fileName = "CasinoUsers/testUser.save";
+        fileName = "Casino/CasinoUsers/"+userName+".save";
 
         fw = new FileOutputStream( fileName );
         pw = new PrintWriter(fw);
         pw.println(userName);
         pw.println(balance);
         pw.close();
+
+    }
+
+    // loads user info from a file
+    public void loadUser() throws IOException {
+
+        fileName = "Casino/CasinoUsers/"+userName+".save";
+
+        FileReader reader = new FileReader(fileName);
+        Scanner scan = new Scanner(reader);
+        userName = scan.nextLine();
+        balance = Double.parseDouble(scan.nextLine());
+        scan.close();
+        balanceLabel.setText(String.format("Balance: $%.2f", balance));
+        nameLabel.setText(String.format(userName));
 
     }
 
