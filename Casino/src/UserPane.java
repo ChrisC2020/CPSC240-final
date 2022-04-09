@@ -10,29 +10,25 @@ import java.util.Scanner;
 
 public class UserPane implements ActionListener {
 
-    private JLabel nameLabel;
-    private JLabel balanceLabel;
-    private JButton changeButton;
-    private JButton newButton;
-    private JPanel userPanel;
-    private JScrollPane userPane;
-    private JTextField bet;
-    private JButton setBet;
-    private JLabel betLabel;
+    private final JLabel nameLabel;
+    private final JLabel balanceLabel;
+    private final JButton changeButton;
+    private final JButton newButton;
+    private final JScrollPane userPane;
+    private final JTextField bet;
+    private final JButton setBet;
+    private final JLabel betLabel;
     private double currentBet = 0;
-    private double balance = 500;
-    private String stringBalance = "";
-    private FileOutputStream fw;
-    private PrintWriter pw;
+    private double balance = 0;
     private String fileName;
-    private String userName = "testPlayer";
+    private String userName = "";
 
     public UserPane() {
 
         // create user scroll pane
-        userPanel = new JPanel();
+        JPanel userPanel = new JPanel();
         nameLabel = new JLabel(userName);
-        stringBalance = String.format("Balance: $%.2f", balance);
+        String stringBalance = String.format("Balance: $%.2f", balance);
         balanceLabel = new JLabel(stringBalance);
         changeButton = new JButton("Change User");
         changeButton.addActionListener(this);
@@ -50,7 +46,7 @@ public class UserPane implements ActionListener {
         bet.setAlignmentX(Component.CENTER_ALIGNMENT);
         setBet.setAlignmentX(Component.CENTER_ALIGNMENT);
         betLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        userPanel.add(Box.createRigidArea( new Dimension( 1 , 75 )));
+        userPanel.add(Box.createRigidArea( new Dimension( 1 , 90 )));
         userPanel.add(nameLabel);
         userPanel.add(Box.createRigidArea( new Dimension( 1 , 15 )));
         userPanel.add(balanceLabel);
@@ -58,7 +54,7 @@ public class UserPane implements ActionListener {
         userPanel.add(changeButton);
         userPanel.add(Box.createRigidArea( new Dimension( 1 , 15 )));
         userPanel.add(newButton);
-        userPanel.add(Box.createRigidArea( new Dimension( 1 , 60 )));
+        userPanel.add(Box.createRigidArea( new Dimension( 1 , 80 )));
         userPanel.add(bet);
         userPanel.add(Box.createRigidArea( new Dimension( 1 , 15 )));
         userPanel.add(setBet);
@@ -82,6 +78,7 @@ public class UserPane implements ActionListener {
                 currentBet = 0;
             }
             betLabel.setText(String.format("Current bet: $%.2f", currentBet));
+            bet.setText("");
             // changes users
         } else if ( button == changeButton ) {
             try {
@@ -89,7 +86,7 @@ public class UserPane implements ActionListener {
                 loadUser();
                 currentBet = 0;
                 betLabel.setText(String.format("Current bet: $%.2f", currentBet));
-            } catch ( IOException ioe ){
+            } catch ( IOException ioe ) {
                 JOptionPane.showMessageDialog(null, "Unable to load user.");
             }
         } else if ( button == newButton ) {
@@ -100,11 +97,11 @@ public class UserPane implements ActionListener {
                 saveUser();
                 currentBet = 0;
                 betLabel.setText(String.format("Current bet: $%.2f", currentBet));
-            } catch ( IOException ioe ){
+            } catch ( IOException ioe ) {
                 JOptionPane.showMessageDialog(null, "Unable to create user.");
             }
             balanceLabel.setText(String.format("Balance: $%.2f", balance));
-            nameLabel.setText(String.format(userName));
+            nameLabel.setText(userName);
         } else {
             JOptionPane.showMessageDialog(null, "???");
         }
@@ -145,8 +142,8 @@ public class UserPane implements ActionListener {
 
         fileName = "Casino/CasinoUsers/"+userName+".save";
 
-        fw = new FileOutputStream( fileName );
-        pw = new PrintWriter(fw);
+        FileOutputStream fw = new FileOutputStream(fileName);
+        PrintWriter pw = new PrintWriter(fw);
         pw.println(userName);
         pw.println(balance);
         pw.close();
@@ -164,7 +161,7 @@ public class UserPane implements ActionListener {
         balance = Double.parseDouble(scan.nextLine());
         scan.close();
         balanceLabel.setText(String.format("Balance: $%.2f", balance));
-        nameLabel.setText(String.format(userName));
+        nameLabel.setText(userName);
 
     }
 

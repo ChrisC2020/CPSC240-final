@@ -3,17 +3,13 @@ import java.awt.*;
 
 public class CasinoGui extends JPanel {
 
-    private JSplitPane sPane;
-    private JTabbedPane gamePane;
-    private JScrollPane userPane;
-
     public CasinoGui() {
 
         UserPane up = new UserPane();
-        userPane = up.getUserPane();
+        JScrollPane userPane = up.getUserPane();
 
         // create tabbed game pane
-        gamePane = new JTabbedPane();
+        JTabbedPane gamePane = new JTabbedPane();
 
         // placeholder panel for slots
         JPanel game1 = new JPanel();
@@ -28,7 +24,7 @@ public class CasinoGui extends JPanel {
         gamePane.addTab("Roulette", game2); // replace game2 with a JPanel returned from your class
 
         // create split pane with user and game panes
-        sPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, userPane, gamePane);
+        JSplitPane sPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, userPane, gamePane);
         sPane.setOneTouchExpandable(false);
         sPane.setDividerLocation(150);
 
