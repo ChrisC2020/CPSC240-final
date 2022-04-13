@@ -17,11 +17,9 @@ public class CasinoGui extends JPanel {
         game1.add(game1text);
         gamePane.addTab("Slots", game1); // replace game1 with a JPanel returned from your class
 
-        // placeholder panel for roulette
-        JPanel game2 = new JPanel();
-        JLabel game2text = new JLabel("game goes here");
-        game2.add(game2text);
-        gamePane.addTab("Roulette", game2); // replace game2 with a JPanel returned from your class
+
+        Roulette roulette = new Roulette();
+        gamePane.addTab("Roulette", roulette.gamePanel); // replace game2 with a JPanel returned from your class
 
         // create split pane with user and game panes
         JSplitPane sPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, userPane, gamePane);
