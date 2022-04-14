@@ -4,7 +4,16 @@
 //gives a different payout depending on which it is
 //may implement checking for specific faces for face-specific payouts
 
-public class SlotMachine {
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+public class SlotMachine implements ActionListener {
     private Reel reel1 = new Reel();
     private Reel reel2 = new Reel();
     private Reel reel3 = new Reel();
@@ -12,6 +21,13 @@ public class SlotMachine {
     private ReelFaces face1;
     private ReelFaces face2;
     private ReelFaces face3;
+
+    //these are for the GUI
+    JButton lever;
+    JLabel reelLabel1;
+    JLabel reelLabel2;
+    JLabel reelLabel3;
+
 
     public void build(){
 
@@ -69,4 +85,69 @@ public class SlotMachine {
         }
     }
 
+    public JPanel displaySlotMachine() {
+        SpringLayout layout = new SpringLayout();
+        JPanel slotMachinePanel = new JPanel();
+
+        slotMachinePanel.setLayout(layout);
+
+
+        try{
+            BufferedImage wPic = ImageIO.read(this.getClass().getResource("Reel Faces window size.jpg"));
+            BufferedImage lPic = ImageIO.read(this.getClass().getResource("leverUpTemp.png"));
+            reelLabel1 = new JLabel(new ImageIcon(wPic));
+            reelLabel2 = new JLabel(new ImageIcon(wPic));
+            reelLabel3 = new JLabel(new ImageIcon(wPic));
+            lever = new JButton(new ImageIcon(lPic));
+
+
+            //constraints to fit the reels
+            layout.putConstraint(SpringLayout.WEST, reelLabel1, 5, SpringLayout.WEST, slotMachinePanel);
+            layout.putConstraint(SpringLayout.NORTH, reelLabel1, 50, SpringLayout. NORTH, slotMachinePanel);
+
+            layout.putConstraint(SpringLayout.WEST, reelLabel2,174, SpringLayout.WEST, slotMachinePanel);
+            layout.putConstraint(SpringLayout.NORTH, reelLabel2,50, SpringLayout.NORTH, slotMachinePanel);
+
+            layout.putConstraint(SpringLayout.WEST, reelLabel3,343, SpringLayout.WEST, slotMachinePanel);
+            layout.putConstraint(SpringLayout.NORTH, reelLabel3,50, SpringLayout.NORTH, slotMachinePanel);
+
+
+            //constraints to fit the lever
+            layout.putConstraint(SpringLayout.WEST, lever,512, SpringLayout.WEST, slotMachinePanel);
+            layout.putConstraint(SpringLayout.NORTH, lever,150, SpringLayout.NORTH, slotMachinePanel);
+
+            //slotMachinePanel.add(first);
+            //slotMachinePanel.add(second);
+            slotMachinePanel.add(reelLabel1);
+            slotMachinePanel.add(reelLabel2);
+            slotMachinePanel.add(reelLabel3);
+            slotMachinePanel.add(lever);
+
+            lever.addActionListener(this);
+
+        }catch (Exception e){
+            JLabel failure = new JLabel("Panel");
+            slotMachinePanel.add(failure);
+            System.out.println("Slots panel failed to load");
+
+        }
+
+        return slotMachinePanel;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object button = e.getSource();
+
+        if(button == lever){
+            try{
+                BufferedImage lPic = ImageIO.read(this.getClass().getResource("leverDownTemp.png"));
+                lever.setIcon(new ImageIcon(lPic));
+                //this works, I'm able to change the image on click
+                //give it a countdown and then update it back to being upright
+            }catch (Exception x){
+                System.out.println("Something went wrong with the Lever");
+            }
+        }
+    }
 }
