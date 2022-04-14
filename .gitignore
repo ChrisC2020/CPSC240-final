@@ -25,3 +25,6 @@ hs_err_pid*
 
 #this folder is IDE specific, so should be ignored
 .idea/
+
+#this folder includes output that was not meant to be pushed
+.out/
