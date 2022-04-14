@@ -15,8 +15,7 @@ public class CasinoGui extends JPanel {
         SlotMachine slots = new SlotMachine();
         gamePane.addTab("Slots", slots.displaySlotMachine()); // replace game1 with a JPanel returned from your class
 
-
-
+        //panel for roulette
         Roulette roulette = new Roulette();
         gamePane.addTab("Roulette", roulette.gamePanel); // replace game2 with a JPanel returned from your class
 
