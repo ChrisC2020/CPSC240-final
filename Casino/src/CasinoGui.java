@@ -12,8 +12,8 @@ public class CasinoGui extends JPanel {
         JTabbedPane gamePane = new JTabbedPane();
 
         // panel for slots
-        SlotMachine thing = new SlotMachine();
-        gamePane.addTab("Slots", thing.displaySlotMachine()); // replace game1 with a JPanel returned from your class
+        SlotMachine slots = new SlotMachine();
+        gamePane.addTab("Slots", slots.displaySlotMachine()); // replace game1 with a JPanel returned from your class
 
 
 
