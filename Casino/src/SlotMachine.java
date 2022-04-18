@@ -22,12 +22,20 @@ public class SlotMachine implements ActionListener {
     private ReelFaces face2;
     private ReelFaces face3;
 
+    //UserPane here so we can access the methods from all our internal methods without needing to pass it
+    private UserPane currentUser;
+
     //these are for the GUI
     JButton lever;
     JLabel reelLabel1;
     JLabel reelLabel2;
     JLabel reelLabel3;
 
+    public SlotMachine(UserPane givenUser){
+
+        this.build();
+        currentUser = givenUser;
+    }
 
     public void build(){
 
@@ -40,10 +48,11 @@ public class SlotMachine implements ActionListener {
     public void spin(){
         //I may want to integrate multithreading right here so they can all do their spins at the same time (visually)
         //If only 1 thread is used, they might try to spin 1 at a time.
+        double bet = currentUser.getCurrentBet();
         reel1.Spin();
         reel2.Spin();
         reel3.Spin();
-        payout(getWinner());
+        payout(getWinner(), bet);
     }
 
     public int getWinner(){
@@ -69,17 +78,20 @@ public class SlotMachine implements ActionListener {
         }
     }
 
-    public void payout(int winnerResult) {
+    public void payout(int winnerResult, double bet) {
         //alter the player balance from this method somehow?
         //return the double value of currency gained/lost, then have the top level thing that called it do the change?
         switch (winnerResult) { //prints were for testing without GUI
             case 1:
-                //System.out.println("Payed out the jackpot!");
+                //System.out.println("Paid out the jackpot!");
+                currentUser.setBalance(currentUser.getBalance()+(bet*2));
                 break;
             case 2:
                 //System.out.println("Paid out the minor prize!");
+                currentUser.setBalance(currentUser.getBalance()+bet);
                 break;
             case 0:
+                currentUser.setBalance(currentUser.getBalance()-bet);
                 //System.out.println("Removed money from your balance!");
                 break;
         }
@@ -145,6 +157,7 @@ public class SlotMachine implements ActionListener {
                 lever.setIcon(new ImageIcon(lPic));
                 //this works, I'm able to change the image on click
                 //give it a countdown and then update it back to being upright
+                this.spin(); //this should spin it right?
             }catch (Exception x){
                 System.out.println("Something went wrong with the Lever");
             }
