@@ -127,6 +127,11 @@ public class UserPane implements ActionListener {
 
         this.balance = balance;
         balanceLabel.setText(String.format("Balance: $%.2f", balance));
+        try {
+            saveUser();
+        } catch ( IOException ioe ) {
+            JOptionPane.showMessageDialog(null, "Could not save");
+        }
 
     }
 
