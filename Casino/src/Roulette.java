@@ -48,7 +48,8 @@ public class Roulette implements  ActionListener {
         blackTiles = new int[] {15, 4, 2, 17, 6, 13, 11, 8, 10, 24, 33, 20, 31, 22, 29, 28, 35, 26};
         wager = betAmount;
 
-        spinButton.addActionListener(this::actionPerformed);
+        spinButton = new JButton();
+        spinButton.addActionListener(this);
     }
 
     //create starting GUI screen here
