@@ -30,6 +30,7 @@ public class Roulette implements  ActionListener {
     JPanel jPanel;
     JTextField betField;
     JButton spinButton;
+    Ball ball;
 
 
 
@@ -38,17 +39,28 @@ public class Roulette implements  ActionListener {
 
     //create game panel???
     //user bet as parameter
-    public Roulette(){
+    public Roulette(double betAmount){
         jPanel = new JPanel();
         JLabel label = new JLabel("A string of letters");
         jPanel.add(label);
         allTiles = new int[] {0, 32, 15, 19, 4, 21, 2, 25,17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26};
         redTiles = new int[] {32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3};
         blackTiles = new int[] {15, 4, 2, 17, 6, 13, 11, 8, 10, 24, 33, 20, 31, 22, 29, 28, 35, 26};
+        wager = betAmount;
+
+        spinButton.addActionListener(this::actionPerformed);
     }
 
+    //create starting GUI screen here
+    public JPanel getJPanel(){
+        FlowLayout layout = new FlowLayout();
+        jPanel.setLayout(layout);
+        try{
+            ball  = new Ball();
 
-    public JPanel getjPanel(){
+        }catch (Exception e){
+
+        }
         return jPanel;
     }
 
@@ -78,25 +90,18 @@ public class Roulette implements  ActionListener {
     }
 
 
-    public void createBall(){
-        Ball ball = new Ball();
-    }
-
-    public void createWheel(){
-        Wheel wheel = new Wheel();
-    }
-
-
     //stagnant wheel, ball moves in circular motion
-    //start position is between two tiles, offset
-    public double spin(){
+    //start position is between two tiles, offset by (360/37)/2
+    /**
+     * calculate ending value of spin and determine degrees of rotation for ball path
+     * */
+    public void spin(){
         startValIndex = 0;
         rotations = rng.nextInt(3,7);
         tileTurns = rng.nextInt(0, 37);
         degreeTurn = tileTurns * (360/37);
         endValIndex = startValIndex + tileTurns;
 
-        return degreeTurn;
     }
 
 
@@ -123,32 +128,38 @@ public class Roulette implements  ActionListener {
             }
         }
 
+        if (winnings == 0){
+            // you lose fuckboi
+        }
 
         return winnings;
     }
 
-    //getters and setters
 
-    public int getRotations() {
-        return rotations;
-    }
-
-    //
-    //treat as a main block
-    public void play(double wager){
-
-    }
 
     //Figure this one out
-    public void changeWager(){
-
+    public void setWager(double amount){
+        wager = amount;
     }
 
 
     //GUI
+    //attach to spin button
+    //make play block???
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
 
+        //gotta figure something out here
+        //setWager(wager);
+
+        setBet();
+
+        spin();
+
+        //spin ball here
+        //method or write here???
+
+        payout();
     }
 
     public enum WINTYPE{COLOR, NUMBER};

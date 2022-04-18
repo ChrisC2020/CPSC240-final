@@ -1,8 +1,16 @@
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
+
 public class Ball {
 
-    //private variables if self drawn
+    private Image ball;
 
     public Ball(){
-        //image or self drawn???
+        try{
+            ball = ImageIO.read(new File("RouletteBall.png"));
+        } catch (Exception e) {
+            ball = null;
+        }
     }
 }
