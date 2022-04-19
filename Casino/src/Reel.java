@@ -38,7 +38,7 @@ public class Reel {
         faces.put(6,ReelFaces.sevenRed);
         wPic = ImageIO.read(this.getClass().getResource("Images/6_SEVEN_RED.png"));
         facePictures.put(6, new ImageIcon(wPic));
-        //System.out.println("successfully populated");
+        System.out.println("successfully populated");
     }
 
     public void Spin(JLabel foo){ //advances the currentFace of the Reel a random number of times
@@ -72,31 +72,31 @@ public class Reel {
         //change the icon  to be whatever it's supposed to be according to that
         switch (currentFaceInt){
             case 0:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(0));
 
             case 1:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(1));
                 break;
             case 2:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(2));
                 break;
             case 3:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(3));
                 break;
             case 4:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(4));
                 break;
             case 5:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(5));
                 break;
             case 6:
-                //System.out.println("currentFaceInt = " + currentFaceInt);
+                System.out.println("currentFaceInt = " + currentFaceInt);
                 foo.setIcon(facePictures.get(6));
                 break;
             default:
