@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import static java.lang.Thread.sleep;
+
 public class SlotMachine implements ActionListener {
     private Reel reel1 = new Reel();
     private Reel reel2 = new Reel();
@@ -40,18 +42,25 @@ public class SlotMachine implements ActionListener {
     public void build(){
 
         //fills the reels with faces
-        reel1.Populate();
-        reel2.Populate();
-        reel3.Populate();
+        try {
+            reel1.Populate();
+            reel2.Populate();
+            reel3.Populate();
+        } catch (IOException e) {
+            System.out.println("Populating the reels failed.");
+            e.printStackTrace();
+        }
     }
 
     public void spin(){
         //I may want to integrate multithreading right here so they can all do their spins at the same time (visually)
         //If only 1 thread is used, they might try to spin 1 at a time.
         double bet = currentUser.getCurrentBet();
-        reel1.Spin();
-        reel2.Spin();
-        reel3.Spin();
+
+        //pass them their labels so they can update the images.
+        reel1.Spin(reelLabel1);
+        reel2.Spin(reelLabel2);
+        reel3.Spin(reelLabel3);
         payout(getWinner(), bet);
     }
 
@@ -105,8 +114,8 @@ public class SlotMachine implements ActionListener {
 
 
         try{
-            BufferedImage wPic = ImageIO.read(this.getClass().getResource("Reel Faces window size.jpg"));
-            BufferedImage lPic = ImageIO.read(this.getClass().getResource("leverUpTemp.png"));
+            BufferedImage wPic = ImageIO.read(this.getClass().getResource("Images/0_BAR_BLUE.png"));
+            BufferedImage lPic = ImageIO.read(this.getClass().getResource("Images/leverUpTemp.png"));
             reelLabel1 = new JLabel(new ImageIcon(wPic));
             reelLabel2 = new JLabel(new ImageIcon(wPic));
             reelLabel3 = new JLabel(new ImageIcon(wPic));
@@ -153,14 +162,19 @@ public class SlotMachine implements ActionListener {
 
         if(button == lever){
             try{
-                BufferedImage lPic = ImageIO.read(this.getClass().getResource("leverDownTemp.png"));
+                BufferedImage lPic = ImageIO.read(this.getClass().getResource("Images/leverDownTemp.png"));
                 lever.setIcon(new ImageIcon(lPic));
                 //this works, I'm able to change the image on click
                 //give it a countdown and then update it back to being upright
                 this.spin(); //this should spin it right?
+                //lPic = ImageIO.read(this.getClass().getResource("Images/leverUpTemp.png"));
+                //sleep(1000);
+                //.setIcon(new ImageIcon(lPic));
+                //okay this is only changing the picture once, that's not what I want.
             }catch (Exception x){
                 System.out.println("Something went wrong with the Lever");
             }
+            //this.spin();
         }
     }
 }
