@@ -74,7 +74,8 @@ public class UserPane implements ActionListener {
             currentBet = Double.parseDouble(bet.getText());
             if ( currentBet > balance ) {
                 currentBet = balance;
-            } else if (currentBet < 0 ) {
+            }
+            if (currentBet < 0 ) {
                 currentBet = 0;
             }
             betLabel.setText(String.format("Current bet: $%.2f", currentBet));
