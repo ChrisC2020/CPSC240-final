@@ -4,11 +4,20 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 
+
+/**
+ * This class reads in pictures of a roulette wheel with varying ball positions
+ * stores pictures in a hashmap
+ */
 public class RouletteWheel {
     private HashMap<Integer, ImageIcon> endings;
     BufferedImage temp;
     ImageIcon alsoTemp;
 
+    /**
+     * Constructor
+     * instantiates the hashmap and inserts pictures
+     */
     public RouletteWheel(){
         endings = new HashMap<>();
 
@@ -174,6 +183,10 @@ public class RouletteWheel {
 
     }
 
+    /**
+     * gets ending pics in a hashmap
+     * @return hashmap of pics
+     */
     public HashMap getEndings(){
         return endings;
     }
