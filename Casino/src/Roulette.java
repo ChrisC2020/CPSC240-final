@@ -4,12 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -20,6 +17,7 @@ public class Roulette implements  ActionListener {
     int endValIndex;
     int tileTurns;
     double wager;
+    boolean validEntry = true;
     String bet;
     WINTYPE wintype = WINTYPE.NUMBER;
     UserPane userPane;
@@ -38,6 +36,7 @@ public class Roulette implements  ActionListener {
     JLabel redLabel;
     JLabel blackLabel;
     JLabel numberLabel;
+    JLabel gap;
     JLabel wheelPic;
     JLabel betLabel;
     JTextField betField;
@@ -69,8 +68,11 @@ public class Roulette implements  ActionListener {
 
         instructionLabel = new JLabel("Valid bets include:");
         redLabel = new JLabel("'red' (2:1 odds)");
+        redLabel.setForeground(Color.RED);
         blackLabel = new JLabel("'black' (2:1 odds)");
         numberLabel = new JLabel("A number 0-36 (37:1 odds)");
+        numberLabel.setForeground(Color.GREEN.darker());
+        gap = new JLabel(" ");
 
 
         //add label for valid entries???
@@ -85,6 +87,7 @@ public class Roulette implements  ActionListener {
         dataPanel.add(redLabel);
         dataPanel.add(blackLabel);
         dataPanel.add(numberLabel);
+        dataPanel.add(gap);
         dataPanel.add(betLabel);
         dataPanel.add(betField);
         dataPanel.add(spinButton);
@@ -115,13 +118,16 @@ public class Roulette implements  ActionListener {
 
         if(bet.strip().equalsIgnoreCase("black")){
             wintype = WINTYPE.COLOR;
+            validEntry = true;
         } else if (bet.strip().equalsIgnoreCase("red")){
             wintype = WINTYPE.COLOR;
+            validEntry = true;
         } else if (Integer.parseInt(bet) >= 0 && Integer.parseInt(bet) <= 37){
             wintype = WINTYPE.NUMBER;
+            validEntry = true;
         } else {
-            //print invalid message statement
-            return setBet();
+            JOptionPane.showMessageDialog(null, "Invalid entry!");
+            validEntry = false;
         }
 
         return bet;
@@ -146,17 +152,24 @@ public class Roulette implements  ActionListener {
     public double payout(){
         double winnings = 0;
 
+
+        //Results via JOptionPane
         if (wintype == WINTYPE.COLOR){
             if(Arrays.asList(redTiles).contains(allTiles[endValIndex])) {
                 //print red wins?
                 winnings = wager * 2;
                 userPane.setBalance(userPane.getBalance()+winnings);
+                JOptionPane.showMessageDialog(null, "Congratulations! Red wins!");
             }
 
             else if (Arrays.asList(blackTiles).contains(allTiles[endValIndex])){
                 //print black wins
                 winnings = wager * 2;
                 userPane.setBalance(userPane.getBalance()+winnings);
+                JOptionPane.showMessageDialog(null, "Congratulations! Black wins!");
+            } else {
+                userPane.setBalance(userPane.getBalance()-wager);
+                JOptionPane.showMessageDialog(null, "Sorry, better luck next time!");
             }
         }
 
@@ -165,12 +178,13 @@ public class Roulette implements  ActionListener {
             if (Integer.parseInt(bet) == allTiles[endValIndex]) {
                 winnings = wager * 37;
                 userPane.setBalance(userPane.getBalance()+winnings);
+                JOptionPane.showMessageDialog(null, "Congratulations! " + allTiles[endValIndex] + " wins!");
+            } else {
+                userPane.setBalance(userPane.getBalance()-wager);
+                JOptionPane.showMessageDialog(null, "Sorry, better luck next time!");
             }
         }
 
-        if (winnings == 0){
-            userPane.setBalance(userPane.getBalance()-wager);
-        }
 
         return winnings;
     }
@@ -191,9 +205,13 @@ public class Roulette implements  ActionListener {
 
         setBet();
 
-        spin();
+        if(validEntry==true){
 
-        payout();
+            spin();
+
+            payout();
+        }
+
     }
 
     public enum WINTYPE{COLOR, NUMBER};
