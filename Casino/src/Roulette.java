@@ -1,10 +1,15 @@
 //imports and whatnot
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -12,56 +17,88 @@ import java.util.Random;
 
 public class Roulette implements  ActionListener {
     Random rng = new Random();
-    int startValIndex;
     int endValIndex;
-    int rotations;
     int tileTurns;
-    double degreeTurn;
     double wager;
     String bet;
     WINTYPE wintype = WINTYPE.NUMBER;
+    UserPane userPane;
 
     //store winning values somehow
     int[] allTiles;
     int[] redTiles;
     int[] blackTiles;
+    HashMap<Integer, ImageIcon> endings;
 
     //GUI variable & objects
     JPanel jPanel;
+    JPanel roulettePanel;
+    JPanel dataPanel;
+    JLabel instructionLabel;
+    JLabel redLabel;
+    JLabel blackLabel;
+    JLabel numberLabel;
+    JLabel wheelPic;
+    JLabel betLabel;
     JTextField betField;
     JButton spinButton;
-    Ball ball;
 
+    //something about print and remove JLabels
 
-
-    //use JButtons to select tiles to wager on
-    //JButton as parameter
 
     //create game panel???
     //user bet as parameter
-    public Roulette(double betAmount){
-        jPanel = new JPanel();
-        JLabel label = new JLabel("A string of letters");
-        jPanel.add(label);
+    public Roulette(UserPane up) {
+        userPane = up;
         allTiles = new int[] {0, 32, 15, 19, 4, 21, 2, 25,17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26};
         redTiles = new int[] {32, 19, 21, 25, 34, 27, 36, 30, 23, 5, 16, 1, 14, 9, 18, 7, 12, 3};
         blackTiles = new int[] {15, 4, 2, 17, 6, 13, 11, 8, 10, 24, 33, 20, 31, 22, 29, 28, 35, 26};
-        wager = betAmount;
 
-        spinButton = new JButton();
-        spinButton.addActionListener(this);
+        RouletteWheel rouletteWheel = new RouletteWheel();
+        endings = rouletteWheel.getEndings();
     }
 
     //create starting GUI screen here
     public JPanel getJPanel(){
+        jPanel = new JPanel();
+        roulettePanel = new JPanel();
+
+        dataPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(dataPanel, BoxLayout.PAGE_AXIS);
+        dataPanel.setLayout(boxLayout);
+
+        instructionLabel = new JLabel("Valid bets include:");
+        redLabel = new JLabel("'red' (2:1 odds)");
+        blackLabel = new JLabel("'black' (2:1 odds)");
+        numberLabel = new JLabel("A number 0-36 (37:1 odds)");
+
+
+        //add label for valid entries???
+        betLabel = new JLabel("Place a bet:");
+        betField = new JTextField();
+
+        spinButton = new JButton("Spin");
+        spinButton.addActionListener(this);
+
+
+        dataPanel.add(instructionLabel);
+        dataPanel.add(redLabel);
+        dataPanel.add(blackLabel);
+        dataPanel.add(numberLabel);
+        dataPanel.add(betLabel);
+        dataPanel.add(betField);
+        dataPanel.add(spinButton);
+
         FlowLayout layout = new FlowLayout();
         jPanel.setLayout(layout);
-        try{
-            ball  = new Ball();
 
-        }catch (Exception e){
+        wheelPic = new JLabel(endings.get(37));
 
-        }
+        jPanel.add(wheelPic);
+        jPanel.add(dataPanel);
+
+
+        jPanel.setVisible(true);
         return jPanel;
     }
 
@@ -97,11 +134,10 @@ public class Roulette implements  ActionListener {
      * calculate ending value of spin and determine degrees of rotation for ball path
      * */
     public void spin(){
-        startValIndex = 0;
-        rotations = rng.nextInt(3,7);
         tileTurns = rng.nextInt(0, 37);
-        degreeTurn = tileTurns * (360/37);
-        endValIndex = startValIndex + tileTurns;
+        endValIndex = tileTurns;
+
+        wheelPic.setIcon(endings.get(allTiles[endValIndex]));
 
     }
 
@@ -111,14 +147,16 @@ public class Roulette implements  ActionListener {
         double winnings = 0;
 
         if (wintype == WINTYPE.COLOR){
-            if(Arrays.asList(redTiles).contains(Integer.parseInt(bet))) {
+            if(Arrays.asList(redTiles).contains(allTiles[endValIndex])) {
                 //print red wins?
                 winnings = wager * 2;
+                userPane.setBalance(userPane.getBalance()+winnings);
             }
 
-            else if (Arrays.asList(blackTiles).contains(Integer.parseInt(bet))){
+            else if (Arrays.asList(blackTiles).contains(allTiles[endValIndex])){
                 //print black wins
                 winnings = wager * 2;
+                userPane.setBalance(userPane.getBalance()+winnings);
             }
         }
 
@@ -126,21 +164,20 @@ public class Roulette implements  ActionListener {
         else if (wintype == WINTYPE.NUMBER){
             if (Integer.parseInt(bet) == allTiles[endValIndex]) {
                 winnings = wager * 37;
+                userPane.setBalance(userPane.getBalance()+winnings);
             }
         }
 
         if (winnings == 0){
-            // you lose fuckboi
+            userPane.setBalance(userPane.getBalance()-wager);
         }
 
         return winnings;
     }
 
 
-
-    //Figure this one out
-    public void setWager(double amount){
-        wager = amount;
+    public void setWager(){
+        wager = userPane.getCurrentBet();
     }
 
 
@@ -150,15 +187,11 @@ public class Roulette implements  ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        //gotta figure something out here
-        //setWager(wager);
+        setWager();
 
         setBet();
 
         spin();
-
-        //spin ball here
-        //method or write here???
 
         payout();
     }
