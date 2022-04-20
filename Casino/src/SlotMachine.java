@@ -1,4 +1,4 @@
-//Only one slot machine is made, should it be a Singleton?
+//Only one slot machine is made, should I bother making it a Singleton? It's not like anyone else is messing with this.
 //Consists of 3 reels (and a lever (button))
 //has 3 "paylines": straight across and both diagonals
 //gives a different payout depending on which it is
@@ -13,8 +13,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static java.lang.Thread.sleep;
-
+/**
+ * @author Chris
+ * This class represents a slot machine in a casino
+ */
 public class SlotMachine implements ActionListener {
     private Reel reel1 = new Reel();
     private Reel reel2 = new Reel();
@@ -33,12 +35,18 @@ public class SlotMachine implements ActionListener {
     JLabel reelLabel2;
     JLabel reelLabel3;
 
-    public SlotMachine(UserPane givenUser){
-
+    /**
+     * Creates a slot machine.
+     * @param givenUserPane Gives the UserPane from the main section so it can access the methods
+     */
+    public SlotMachine(UserPane givenUserPane){
         this.build();
-        currentUser = givenUser;
+        currentUser = givenUserPane;
     }
 
+    /**
+     * Fills the Reels of the slot machine with faces so they're not empty
+     */
     public void build(){
 
         //fills the reels with faces
@@ -52,18 +60,28 @@ public class SlotMachine implements ActionListener {
         }
     }
 
+    /**
+     * Plays the slot machine.
+     */
     public void spin(){
         //I may want to integrate multithreading right here so they can all do their spins at the same time (visually)
         //If only 1 thread is used, they might try to spin 1 at a time.
         double bet = currentUser.getCurrentBet();
-
-        //pass them their labels so they can update the images.
-        reel1.Spin(reelLabel1);
-        reel2.Spin(reelLabel2);
-        reel3.Spin(reelLabel3);
-        payout(getWinner(), bet);
+        if (bet <= currentUser.getBalance()){
+            //pass them their labels so they can update the images.
+            reel1.Spin(reelLabel1);
+            reel2.Spin(reelLabel2);
+            reel3.Spin(reelLabel3);
+            payout(getWinner(), bet);
+        }else{
+            JOptionPane.showMessageDialog(null, "That bet is more than your balance");
+        }
     }
 
+    /**
+     * Checks the faces of the Reels for matches.
+     * @return int value to represent which prize to give
+     */
     public int getWinner(){
         //ways to win (each gives a different payout)
         //Straight across (jackpot)
@@ -72,40 +90,48 @@ public class SlotMachine implements ActionListener {
         face2 = reel2.getCurrentFace();
         face3 = reel3.getCurrentFace();
 
-        if (face1 == face2 && face1 == face3) { //does not need the printlns, those were for testing without GUI
-            //System.out.println("Congratulations! You won the jackpot!");
+        if (face1 == face2 && face1 == face3) {
             return 1;
         }else if(reel1.getUpFace()==face2 && reel1.getUpFace()==reel3.getDownFace()) {
-            //System.out.println("Congratulations! You won the down diagonal prize!");
             return 2;
         }else if(reel1.getDownFace()==face2 && reel1.getDownFace()==reel3.getUpFace()){
-            //System.out.println("Congratulations! You won the up diagonal prize!");
             return 2;
         }else{
-            //System.out.println("Better luck next time!");
             return 0;
         }
     }
 
+    /**
+     * Updates the players balance with their rewards (or losses) from their spin().
+     * @param winnerResult Result of getWinner() method
+     * @param bet current bet from the currentUser
+     */
     public void payout(int winnerResult, double bet) {
         //alter the player balance from this method somehow?
         //return the double value of currency gained/lost, then have the top level thing that called it do the change?
         switch (winnerResult) { //prints were for testing without GUI
             case 1:
                 //System.out.println("Paid out the jackpot!");
+                JOptionPane.showMessageDialog(null, "You won the jackpot!");
                 currentUser.setBalance(currentUser.getBalance()+(bet*2));
                 break;
             case 2:
                 //System.out.println("Paid out the minor prize!");
+                JOptionPane.showMessageDialog(null, "You won a minor prize!");
                 currentUser.setBalance(currentUser.getBalance()+bet);
                 break;
             case 0:
+                JOptionPane.showMessageDialog(null, "You lost, better luck next time!");
                 currentUser.setBalance(currentUser.getBalance()-bet);
                 //System.out.println("Removed money from your balance!");
                 break;
         }
     }
 
+    /**
+     * creates the interface for the SlotMachine
+     * @return the JPanel that hold the visible SlotMachine
+     */
     public JPanel displaySlotMachine() {
         SpringLayout layout = new SpringLayout();
         JPanel slotMachinePanel = new JPanel();
@@ -150,31 +176,32 @@ public class SlotMachine implements ActionListener {
             JLabel failure = new JLabel("Panel");
             slotMachinePanel.add(failure);
             System.out.println("Slots panel failed to load");
-
         }
-
         return slotMachinePanel;
     }
 
+    /**
+     * Listens for when the player wants to spin the slots.
+     * @param e Whenever the "play" button is clicked.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object button = e.getSource();
 
         if(button == lever){
-            try{
-                BufferedImage lPic = ImageIO.read(this.getClass().getResource("Images/leverDownTemp.png"));
-                lever.setIcon(new ImageIcon(lPic));
-                //this works, I'm able to change the image on click
-                //give it a countdown and then update it back to being upright
-                this.spin(); //this should spin it right?
-                //lPic = ImageIO.read(this.getClass().getResource("Images/leverUpTemp.png"));
-                //sleep(1000);
-                //.setIcon(new ImageIcon(lPic));
-                //okay this is only changing the picture once, that's not what I want.
-            }catch (Exception x){
-                System.out.println("Something went wrong with the Lever");
+            if(currentUser.getCurrentBet()!=0){
+                try{
+                    //commented out the image change for the time being since I couldn't get it to change back in a way I liked.
+                    //BufferedImage lPic = ImageIO.read(this.getClass().getResource("Images/leverDownTemp.png"));
+                    //lever.setIcon(new ImageIcon(lPic));
+                    //this works, I'm able to change the image on click
+                    //give it a countdown and then update it back to being upright
+                    this.spin();
+
+                }catch (Exception x){
+                    System.out.println("Something went wrong with the Lever");
+                }
             }
-            //this.spin();
         }
     }
 }
