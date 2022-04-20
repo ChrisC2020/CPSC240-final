@@ -18,6 +18,7 @@ public class Roulette implements  ActionListener {
     int tileTurns;
     double wager;
     boolean validEntry = true;
+    boolean winner;
     String bet;
     WINTYPE wintype = WINTYPE.NUMBER;
     UserPane userPane;
@@ -151,33 +152,49 @@ public class Roulette implements  ActionListener {
     //print game and winning results
     public double payout(){
         double winnings = 0;
+        winner = false;
 
 
         //Results via JOptionPane
-        if (wintype == WINTYPE.COLOR){
-            if(Arrays.asList(redTiles).contains(allTiles[endValIndex])) {
-                //print red wins?
-                winnings = wager * 2;
-                userPane.setBalance(userPane.getBalance()+winnings);
-                JOptionPane.showMessageDialog(null, "Congratulations! Red wins!");
-            }
+        if (wintype == WINTYPE.COLOR & bet.equals("red")) {
+            for (int element : redTiles) {
+                if (element == allTiles[endValIndex]) {
 
-            else if (Arrays.asList(blackTiles).contains(allTiles[endValIndex])){
-                //print black wins
-                winnings = wager * 2;
-                userPane.setBalance(userPane.getBalance()+winnings);
-                JOptionPane.showMessageDialog(null, "Congratulations! Black wins!");
-            } else {
+                    winnings = wager * 2;
+                    userPane.setBalance(userPane.getBalance() + winnings);
+                    winner = true;
+                    JOptionPane.showMessageDialog(null, "Congratulations! Red wins!");
+                }
+            }
+            if (winner == false){
+                userPane.setBalance(userPane.getBalance()-wager);
+                JOptionPane.showMessageDialog(null, "Sorry, better luck next time!");
+            }
+        }
+
+        if (wintype == WINTYPE.COLOR & bet.equals("black")) {
+            for (int element : blackTiles) {
+                if (element == allTiles[endValIndex]) {
+
+                    winnings = wager * 2;
+                    userPane.setBalance(userPane.getBalance() + winnings);
+                    winner = true;
+                    JOptionPane.showMessageDialog(null, "Congratulations! Black wins!");
+                }
+            }
+            if (winner == false){
                 userPane.setBalance(userPane.getBalance()-wager);
                 JOptionPane.showMessageDialog(null, "Sorry, better luck next time!");
             }
         }
 
 
-        else if (wintype == WINTYPE.NUMBER){
+
+        if (wintype == WINTYPE.NUMBER){
             if (Integer.parseInt(bet) == allTiles[endValIndex]) {
                 winnings = wager * 37;
                 userPane.setBalance(userPane.getBalance()+winnings);
+                winner = true;
                 JOptionPane.showMessageDialog(null, "Congratulations! " + allTiles[endValIndex] + " wins!");
             } else {
                 userPane.setBalance(userPane.getBalance()-wager);
