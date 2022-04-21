@@ -65,7 +65,7 @@ public class Reel {
      */
     public void Spin(JLabel currentReel){ //advances the currentFace of the Reel a random number of times
         int randomNumber = ThreadLocalRandom.current().nextInt(14, 28); //gives a number between 14 & 28
-        //randomNumber = 1;
+        //randomNumber = 1;  //uncomment and use this line when testing display
         //System.out.println(randomNumber);
         for(; randomNumber>0;randomNumber--){ //counts down the randomNumber, advancing one face at a time till 0
             //do an "Advance" method in here that updates the image to show it spinning
@@ -88,7 +88,7 @@ public class Reel {
     public void Advance(JLabel reelImage, int currentFaceInt) {
         reelImage.setIcon(facePictures.get(currentFaceInt));
 
-        //tried it with a switch, but it had a problem, would consistently display SevenRed as BarBlue
+        //tried it with a switch, but it had a problem, would consistently display BarBlue as SevenWhite
         //while troubleshooting I realized that I could do it better with a single line.
         //I'm keeping this here so I can try to figure out what was wrong at a later date.
         /*

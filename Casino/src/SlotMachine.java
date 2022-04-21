@@ -73,6 +73,7 @@ public class SlotMachine implements ActionListener {
             reel2.Spin(reelLabel2);
             reel3.Spin(reelLabel3);
             payout(getWinner(), bet);
+            //System.out.println(reel1.getCurrentFace()); //uncomment this line when troubleshooting the display problem
         }else{
             JOptionPane.showMessageDialog(null, "That bet is more than your balance");
         }
