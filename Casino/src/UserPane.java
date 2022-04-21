@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+// This class creates the user pane, which creates and manages users
 public class UserPane implements ActionListener {
 
     private final JLabel nameLabel;
@@ -23,6 +24,7 @@ public class UserPane implements ActionListener {
     private String fileName;
     private String userName = "";
 
+    // create the user pane
     public UserPane() {
 
         // create user scroll pane

@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
+// This class creates the window and adds the user pane and game panes to it.
 public class CasinoGui extends JPanel {
 
     public CasinoGui() {
 
+        // create the user pane
         UserPane up = new UserPane();
         JScrollPane userPane = up.getUserPane();
 
@@ -15,7 +17,7 @@ public class CasinoGui extends JPanel {
         SlotMachine slots = new SlotMachine(up);
         gamePane.addTab("Slots", slots.displaySlotMachine()); // replace game1 with a JPanel returned from your class
 
-        //panel for roulette
+        // panel for roulette
         Roulette roulette = new Roulette(up);
         gamePane.addTab("Roulette", roulette.getJPanel()); // replace game2 with a JPanel returned from your class
 
